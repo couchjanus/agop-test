@@ -1,0 +1,75 @@
+/*!
+ * Start Bootstrap - Shop Homepage (https://startbootstrap.com/template-overviews/shop-homepage)
+ * Copyright 2013-2019 Start Bootstrap
+ * Licensed under MIT (https://github.com/BlackrockDigital/startbootstrap-shop-homepage/blob/master/LICENSE)
+ */
+body {
+  padding-top: 56px;
+  
+}
+.modal {
+  background-color: #fff;
+  padding: 2em 3em;
+  text-align: center;
+  border-radius: .5em;
+  border: rgb(1, 73, 136) 2px double;
+  width: 45%;
+  height: 30%;
+  position: fixed;
+  top: 20%;
+  left: 30%;
+  margin: 0 auto;
+  display: none;
+  z-index: 1000;
+}
+
+.modal.is-active {
+  display: block;
+}
+
+.modal-image {
+  width: 40px;
+  height: 40px;
+  margin: 0 auto;
+  border-radius: 50%;
+  box-shadow: 0 0 0 2px #48DB71;
+  padding: 11px 10px 2px;
+  margin-bottom: 2em;
+}
+
+.modal h1 {
+  font-size: 1.5em;
+  font-weight: bold;
+  margin-bottom: .5em;
+}
+
+.modal p {
+  margin-bottom: 2em;
+  color: #666;
+}
+
+.modal .btn-open {
+  display: none;
+}
+.modal .btn-open.is-active {
+  display: block;
+}
+
+.modal button {
+  font-size: 1.25em;
+  font-weight: bold;
+  background-color: #000;
+  border: none;
+  padding: .5em 1em;
+  color: #fff;
+  box-shadow: 0 0 0 2px #000 inset;
+  border-radius: .25em;
+  cursor: pointer;
+  transition: background .4s ease, color .4s ease;
+}
+
+.modal button:hover {
+  box-shadow: 0 0 0 2px #000 inset;
+  color: #000;
+  background-color: transparent;
+}
