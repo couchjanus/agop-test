@@ -5,6 +5,8 @@ function el(selector) {
 function makeProductItem($template, product) {
     $template.querySelector('.product-name').textContent = product.name;
     $template.querySelector('.product-price').textContent = product.price;
+    $template.querySelector('.product-description').textContent = product.description;
+    $template.querySelector('.card-img-top').setAttribute('src', '/storage/'+product.images[0].filepath);
     return $template;
 }
  
@@ -29,6 +31,7 @@ function init(url) {
             return;
         }
         response.json().then(function(jsondata) {
+          console.log('Fetch Date :', jsondata);
           if (Array.isArray(jsondata)) {
             data = jsondata;
           } else {

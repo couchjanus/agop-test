@@ -3,13 +3,13 @@
 
     <div style="margin-bottom: 10px;" class="row">
         <div class="col-lg-12">
-            <a class="btn btn-success" href="{{ route("admin.products.create") }}">Add product</a>
+            <a class="btn btn-success" href="{{ route("admin.categories.create") }}">Add category</a>
         </div>
     </div>
 
 <div class="card">
     <div class="card-header">
-        Product List
+        Categories List
     </div>
 
     <div class="card-body">
@@ -18,14 +18,9 @@
                 <thead>
                     <tr>
                         <th width="10">
-
                         </th>
                         <th>
                             Name
-                        </th>
-                        
-                        <th>
-                            Price
                         </th>
                         <th>
                             &nbsp;
@@ -33,27 +28,25 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach($products as $key => $product)
-                        <tr data-entry-id="{{ $product->id }}">
+                    @foreach($categories as $key => $category)
+                        <tr data-entry-id="{{ $category->id }}">
                             <td>
 
                             </td>
                             <td>
-                                {{ $product->name ?? '' }}
+                                {{ $category->name ?? '' }}
                             </td>
+                            
                             <td>
-                                {{ $product->price ?? '' }}
-                            </td>
-                            <td>
-                                    <a class="btn btn-xs btn-primary" href="{{ route('admin.products.show', $product->id) }}">
+                                    <a class="btn btn-xs btn-primary" href="{{ route('admin.categories.show', $category->id) }}">
                                         view
                                     </a>
-                                    <a class="btn btn-xs btn-info" href="{{ route('admin.products.edit', $product->id) }}">
+                                    <a class="btn btn-xs btn-info" href="{{ route('admin.categories.edit', $category->id) }}">
                                         edit
                                     </a>
-                                    <form action="{{ route('admin.products.destroy', $product->id) }}" method="POST" onsubmit="return confirm('Are You Sure?');" style="display: inline-block;">
-                                        <input type="hidden" name="_method" value="DELETE">
-                                        <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                                    <form action="{{ route('admin.categories.destroy', $category->id) }}" method="POST" onsubmit="return confirm('Are You Sure?');" style="display: inline-block;">
+                                    @csrf
+                                    @method("DELETE")
                                         <input type="submit" class="btn btn-xs btn-danger" value="delete">
                                     </form>
                             </td>
@@ -69,11 +62,12 @@
 @push('scripts')
 
 <script>
+
 $(function () {
   
   let deleteButton = {
     text: 'Delete',
-    url: "{{ route('admin.products.massDestroy') }}",
+    url: "{{ route('admin.categories.massDestroy') }}",
     className: 'btn-danger',
     action: function (e, dt, node, config) {
       var ids = $.map(dt.rows({ selected: true }).nodes(), function (entry) {
@@ -99,5 +93,6 @@ $(function () {
 
   $('.datatable:not(.ajaxTable)').DataTable({ buttons: dtButtons, pageLength: 10 })
 })
+
 </script>
 @endpush

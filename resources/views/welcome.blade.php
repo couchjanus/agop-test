@@ -30,7 +30,7 @@
               <a href="#" class="product-name"></a>
             </h4>
             <h5>$<span class="product-price"></span></h5>
-            <p class="product-categories card-text">
+            <p class="product-description card-text">
                   <span class="badge badge-success"></span>
             </p>
           </div>

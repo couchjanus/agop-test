@@ -26,7 +26,9 @@ class ProductController extends Controller
      */
     public function create()
     {
-        return view('admin.products.create');
+        $categories = \App\Category::all();
+        $brands = \App\Brand::all();
+        return view('admin.products.create', compact('categories', 'brands'));
     }
 
     /**
@@ -39,7 +41,10 @@ class ProductController extends Controller
     {
         $product = Product::create($request->all());
 
-        return redirect()->route('admin.products.index');
+        if ($request->has('categories')) {
+            $product->categories()->sync($request['categories']);
+        }
+        return redirect()->route('admin.products.edit', $product);
     }
 
     /**
@@ -61,7 +66,9 @@ class ProductController extends Controller
      */
     public function edit(Product $product)
     {
-        return view('admin.products.edit', compact('product'));
+        $categories = \App\Category::all();
+        $brands = \App\Brand::all();
+        return view('admin.products.edit', compact('product', 'categories', 'brands'));
     }
 
     /**
@@ -74,8 +81,8 @@ class ProductController extends Controller
     public function update(Request $request, Product $product)
     {
         $product->update($request->all());
-
-        return redirect()->route('admin.products.index');
+        $product->categories()->sync($request['categories']);
+        return redirect(route('admin.products.index'))->with('success', 'Product updated Successfully!');
     }
 
     /**

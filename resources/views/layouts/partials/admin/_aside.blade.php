@@ -30,15 +30,31 @@
                         </p>
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a href="{{ route("admin.brands.index") }}" class="nav-link">
+                        <i class="fas fa-cogs"></i>
+                        <p>
+                            <span>Brands</span>
+                        </p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ route("admin.categories.index") }}" class="nav-link">
+                        <i class="fas fa-cogs"></i>
+                        <p>
+                            <span>Categories</span>
+                        </p>
+                    </a>
+                </li>
 
                 <li class="nav-item">
                     <a href="{{ route("admin.products.index") }}" class="nav-link">
-                            <i class="fas fa-cogs"></i>
-                            <p>
-                                <span>Products</span>
-                            </p>
-                        </a>
-                    </li>
+                        <i class="fas fa-cogs"></i>
+                        <p>
+                            <span>Products</span>
+                        </p>
+                    </a>
+                </li>
 
                 <li class="nav-item">
                     <a href="#" class="nav-link" onclick="event.preventDefault(); document.getElementById('logoutform').submit();">

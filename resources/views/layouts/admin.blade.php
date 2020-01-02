@@ -33,7 +33,7 @@
    
   <!-- Scripts -->
   @include('layouts.partials.admin._scripts')
-  @yield('scripts')
+  @stack('scripts')
 
 </body>
 </html>

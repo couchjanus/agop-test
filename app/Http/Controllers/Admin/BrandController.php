@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Category;
+use App\Brand;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-class CategoryController extends Controller
+class BrandController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,8 +15,8 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $categories = Category::all();
-        return view('admin.categories.index', compact('categories'));
+        $brands = Brand::all();
+        return view('admin.brands.index', compact('brands'));
     }
 
     /**
@@ -26,7 +26,7 @@ class CategoryController extends Controller
      */
     public function create()
     {
-        return view('admin.categories.create');
+        return view('admin.brands.create');
     }
 
     /**
@@ -37,59 +37,59 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        $category = Category::create($request->all());
-        return redirect()->route('admin.categories.index');
+        $brand = Brand::create($request->all());
+        return redirect()->route('admin.brands.index');
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Category  $category
+     * @param  \App\Brand  $brand
      * @return \Illuminate\Http\Response
      */
-    public function show(Category $category)
+    public function show(Brand $brand)
     {
-        return view('admin.categories.show', compact('category'));
+        //
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Category  $category
+     * @param  \App\Brand  $brand
      * @return \Illuminate\Http\Response
      */
-    public function edit(Category $category)
+    public function edit(Brand $brand)
     {
-        return view('admin.categories.edit', compact('category'));
+        return view('admin.brands.edit', compact('brand'));
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Category  $category
+     * @param  \App\Brand  $brand
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Category $category)
+    public function update(Request $request, Brand $brand)
     {
-        $category->update($request->all());
-        return redirect(route('admin.categories.index'))->with('success', 'Category updated Successfully!');
+        $brand->update($request->all());
+        return redirect(route('admin.brands.index'))->with('success', 'Brand updated Successfully!');
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Category  $category
+     * @param  \App\Brand  $brand
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Category $category)
+    public function destroy(Brand $brand)
     {
-        $category->delete();
+        $brand->delete();
         return back();
     }
     public function massDestroy(Request $request)
     {
-        Category::whereIn('id', request('ids'))->delete();
+        Brand::whereIn('id', request('ids'))->delete();
         return response(null, 204);
     }
 }
