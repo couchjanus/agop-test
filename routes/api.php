@@ -7,4 +7,9 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 Route::get('/products', 'ProductController@index');
-Route::get('/category/{id}', 'CategoryController@getById');
+// Route::get('/category/{id}', 'CategoryController@getById');
+
+Route::get('/category/{id}', 'ProductController@getProductsByCategory');
+
+Route::get('/product/{id}', 'ProductController@getProductById');
+

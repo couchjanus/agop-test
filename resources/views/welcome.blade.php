@@ -8,18 +8,9 @@
   
     <input type="hidden" id="providerURL" value="/api/products" />
  
-    <div class="showcase row">
-      
-    </div>
-<div class="modal js-modal">
-        <div class="modal-image">
-          <svg viewBox="0 0 32 32" style="fill:#48DB71"><path d="M1 14 L5 10 L13 18 L27 4 L31 8 L13 26 z"></path></svg>
-        </div>
-        <h3>Product <span id="prductInCart"></span> Added To Cart!</h3>
-        <button class="js-close">Dismiss</button>
-      </div>
-<div class="wrap">
-</div>
+    <div class="showcase row"></div>
+    
+    
 
     <template id="productItem">
       <div class="col-lg-4 col-md-6 mb-4">
@@ -40,5 +31,28 @@
         </div>
       </div>
   </template>
+
+
+  <template id="cartItem">
+    <div class="cart-item">
+        <div class="item item-name"><span class="item-title"></span><i
+                class="far fa-times-circle float-right remove-item"></i></div>
+        <div class="item item-img"> </div>
+
+        <div class="item item-quontity">
+            <i class="fas fa-minus-circle adding minus"></i>
+            <span class="adding quontity">1</span>
+            <i class="fas fa-plus-circle adding plus"></i>
+        </div>
+        <div class="item">$<span class="item-price">00.00</span></div>
+    </div>
+</template>
+      <div class="modal js-modal">
+        <div class="modal-image">
+          <svg viewBox="0 0 32 32" style="fill:#48DB71"><path d="M1 14 L5 10 L13 18 L27 4 L31 8 L13 26 z"></path></svg>
+        </div>
+        <h3>Product <span id="prductInCart"></span> Added To Cart!</h3>
+        <button class="js-close">Dismiss</button>
+      </div>
 
 @stop

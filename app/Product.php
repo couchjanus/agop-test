@@ -3,12 +3,9 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-// use AjCastro\EagerLoadPivotRelations\EagerLoadPivotTrait;
 
 class Product extends \Eloquent
 {
-    // use EagerLoadPivotTrait;
-
     protected $fillable = [
         'name', 'price','brand_id', 'description', 'status'
     ];
