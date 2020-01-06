@@ -13,3 +13,8 @@ Route::get('/category/{id}', 'ProductController@getProductsByCategory');
 
 Route::get('/product/{id}', 'ProductController@getProductById');
 
+// Route::get('/cart', function() {
+//     return view('profile.checkout');
+// }
+
+Route::middleware('auth:api')->post('/cart', 'OrderController@store');

@@ -1,6 +1,6 @@
 @extends('layouts.front')
 @section('title', 'Homepage')
-@section('content')
+@section('page')
 
     <div class="col-12 my-4">
       <h2>Products <span class="forCategory"></span></h2>
@@ -55,4 +55,4 @@
         <button class="js-close">Dismiss</button>
       </div>
 
-@stop
+@endsection
