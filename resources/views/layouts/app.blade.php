@@ -8,9 +8,9 @@
     <title>@yield('title') - {{ config('app.name', 'Laravel') }}</title>
     <!-- Fonts -->
     <!-- Styles -->
-    <script>
-        var user = {!! auth()->user() !!};
-    </script>
+    <meta name="user-id" content="{{ optional(Auth::user())->id ?? "undefined" }}">
+
+    <script>var userObj = {{ $authUser->id ?? "undefined" }}</script>
     @include('layouts.partials._styles')
 </head>
 <body>

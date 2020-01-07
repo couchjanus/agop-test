@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Profile;
+use App\Order;
 use App\Http\Services\ProfileService;
+use Auth;
 
 class HomeController extends Controller
 {
@@ -28,7 +30,6 @@ class HomeController extends Controller
      */
     public function index()
     {
-        // return view('home');
         return view('profile.index');
     }
 
@@ -36,6 +37,13 @@ class HomeController extends Controller
     {
         return view('profile.order');
     }
+
+    public function orders()
+    {
+        $orders = Order::where('user_id', Auth::user()->id)->get();
+        return view('profile.orders', compact('orders'));
+    }
+
 
     public function store(Request $request)
     {

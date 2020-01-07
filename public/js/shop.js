@@ -213,77 +213,82 @@ function renderCartItem(e) {
 
 (function() {
     initStorage();
-    const url = el('#providerURL').value;
-    data = init(url);
 
-    let categoryUrl = document.querySelectorAll('.category');
-    categoryUrl.forEach(function(u) {
-      u.addEventListener('click', function() {
-        let urlPath = el('#providerURL');
-        urlPath.value = "/api/category/"+this.getAttribute('categoryId');
-        init(urlPath.value);
+    let userId = document.head.querySelector("[name~=user-id][content]").content;
+        
+    if (typeof(el('#providerURL')) != 'undefined' && el('#providerURL') != null) {
+      const url = el('#providerURL').value;
+      data = init(url);
+  
+      let categoryUrl = document.querySelectorAll('.category');
+      categoryUrl.forEach(function(u) {
+        u.addEventListener('click', function() {
+          let urlPath = el('#providerURL');
+          urlPath.value = "/api/category/"+this.getAttribute('categoryId');
+          init(urlPath.value);
+        });
       });
-    });
+  
+      var radios = document.getElementsByName('sorting');
+      radios.forEach(function(r){
+        r.addEventListener('change', function() {
+          switch (this.value) {
+            case 'low':
+              data.sort((a, b) => parseFloat(a.price) - parseFloat(b.price));
+              dataList(data);
+              break;
+            case 'high':
+              data.sort((a, b) => -parseFloat(a.price) + parseFloat(b.price));
+              dataList(data);
+              break;
+            case 'newest':
+              data.sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime());
+              dataList(data);
+              break;
+            default:
+              dataList(data);
+          }
+        });
+      });
+    }
 
-    var radios = document.getElementsByName('sorting');
-    radios.forEach(function(r){
-      r.addEventListener('change', function() {
-        switch (this.value) {
-          case 'low':
-            data.sort((a, b) => parseFloat(a.price) - parseFloat(b.price));
-            dataList(data);
-            break;
-          case 'high':
-            data.sort((a, b) => -parseFloat(a.price) + parseFloat(b.price));
-            dataList(data);
-            break;
-          case 'newest':
-            data.sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime());
-            dataList(data);
-            break;
-          default:
-            dataList(data);
-        }
-      });
-    });
     el(".cart-link").addEventListener("click", () => openCart());
     el(".overlay").addEventListener("click", () => closeCart());
     el("#dismiss").addEventListener("click", () => closeCart());
-
-    el(".checkout").addEventListener("click", () => {
-      
-      closeCart();
+    
+    document.querySelector(".checkout").addEventListener("click", () => {
+      if (userObj === undefined) {
+        closeCart();
+        window.location.href = '/login';
+      }
       
       if (localStorage.basket && localStorage.basket.length > 2) {
         let cart = getProducts();
-        // console.log("Cart content: ", cart);
-
-       
-        
-        console.log("user content: ", user.id);
 
         fetch("/api/cart", {
           method: "POST",
-          body: JSON.stringify(cart),
+          body: JSON.stringify({
+            cart: cart,
+            user_id: userObj
+          }),
           headers: {
             "Content-Type": "application/json",
             "X-CSRF-Token": document.head.querySelector("[name~=csrf-token][content]").content
           },
           credentials: "same-origin",
-          // body: getProducts(),
         })
         .then(function(response) {
             localStorage.removeItem("basket");
             initStorage();
             el(".cart-items").innerHTML = "";
             updateTotal();
+            closeCart();
             return response.text();
         })
-        .then(text => {
-          return console.log(text);
-        })
+        // .then(text => {
+        //   return console.log(text);
+        // })
         .catch(error => console.error("Looks like there was a problem. Error Code: ", error));
       }
     });
-  
 })();

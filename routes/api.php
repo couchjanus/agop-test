@@ -17,4 +17,4 @@ Route::get('/product/{id}', 'ProductController@getProductById');
 //     return view('profile.checkout');
 // }
 
-Route::middleware('auth:api')->post('/cart', 'OrderController@store');
+Route::post('/cart', 'OrderController@store');

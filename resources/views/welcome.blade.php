@@ -47,12 +47,5 @@
         <div class="item">$<span class="item-price">00.00</span></div>
     </div>
 </template>
-      <div class="modal js-modal">
-        <div class="modal-image">
-          <svg viewBox="0 0 32 32" style="fill:#48DB71"><path d="M1 14 L5 10 L13 18 L27 4 L31 8 L13 26 z"></path></svg>
-        </div>
-        <h3>Product <span id="prductInCart"></span> Added To Cart!</h3>
-        <button class="js-close">Dismiss</button>
-      </div>
 
 @endsection

@@ -20,6 +20,8 @@ Route::middleware('auth')
             ->name('profile.info');
         Route::put('store', 'HomeController@store')
             ->name('profile.store');
+        Route::get('orders', 'HomeController@orders')
+            ->name('profile.orders');
 });
 
 

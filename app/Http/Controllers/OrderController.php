@@ -2,88 +2,56 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use Illuminate\Http\Request, Response;
+
 use App\Order;
 use App\Product;
 use App\OrderItem;
-use Auth;
 
 use Illuminate\Support\Collection;
 
 class OrderController extends Controller
 {
-    protected $user;
-    
-    public function __construct()
-    {
-        $this->middleware(function ($request, $next) {
-           $this->user = Auth::user();
-            return $next($request);
-        });
-    }
-
     public function store(Request $request)
     {
         $data = json_decode($request->getContent(), true);
-
         // Create a new collection instance.
-        $collection = new Collection($data);
-        // dump($request);
+        $collection = new Collection($data['cart']);
 
         $item_count = $collection->sum('amount');
-        // dump($item_count);
-        
         $getSubTotal = $collection->map(function ($item, $k) {
             return ($item['price']*$item['amount']);
         });
         $grand_total = $getSubTotal->sum();
-        // dump($grand_total);
+       
+        $order = Order::create([
+            'user_id'           => $data['user_id'],
+            'status'            =>  'pending',
+            'grand_total'       =>  $grand_total,
+            'item_count'        =>  $item_count,
+            'payment_status'    =>  0,
+            'payment_method'    =>  null,
+        ]);
 
-        // $user = auth()->user();
-        // auth('api')->user()
-        // $user = auth('api')->user();
-        // if ($user){
-        // dump($user->id);
-        // } else {
-        //     dump('No User');
-        // }
-        
-        // $order = Order::create([
-        //     'user_id'           => Auth::user()->id,
-        //     'status'            =>  'pending',
-        //     'grand_total'       =>  $grand_total,
-        //     'item_count'        =>  $item_count,
-        //     'payment_status'    =>  0,
-        //     'payment_method'    =>  null,
-        // ]);
+        if ($order) {
 
-        // if ($order) {
+            foreach ($collection as $item)
+            {
+                $orderItem = new OrderItem([
+                    'product_id'    =>  $item['id'],
+                    'quantity'      =>  $item['amount'],
+                    'price'         =>  $item['price']
+                ]);
 
-        //     foreach ($collection as $item)
-        //     {
-        //         // dump($item);
-        //         // dump($item['id']);
-        //         // dump($item['amount']);
-        //         // dump($item['price']);
-                
-        //         $orderItem = new OrderItem([
-        //             'product_id'    =>  $item['id'],
-        //             'quantity'      =>  $item['amount'],
-        //             'price'         =>  $item['price']
-        //         ]);
-
-        //         $order->items()->save($orderItem);
-        //     }
-        // }
-
-        // return $order;
+                $order->items()->save($orderItem);
+            }
+        }
 
         $response = [
             'status' => 'success',
             'message' => 'order stored',
         ];
         return response()->json($response);
-
     }
 
     public function index()
@@ -105,5 +73,4 @@ class OrderController extends Controller
         ];
         return response()->json($response);
     }
-   
 }
