@@ -25,5 +25,6 @@
     @include('layouts.partials._footer')
     <!-- Scripts -->
     @include('layouts.partials._scripts')
+    @stack('scripts')
 </body>
 </html>

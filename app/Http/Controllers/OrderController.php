@@ -59,6 +59,25 @@ class OrderController extends Controller
         return Order::all();
     }
 
+    public function show(Order $order)
+    {
+        // return Response::json($order);
+        $items = OrderItem::where('order_id', $order->id)->get();
+
+        // return Response::json($items);
+        $products = collect([]);
+
+        foreach ($items as $item) {
+            $product = Product::where('id', $item->id)->with('categories')->with('images')->with('brand')->first();
+            $product['quantity'] = $item->quantity;
+            $products->push($product);
+        }
+
+        // return Response::json($products);
+
+        return view('profile.order', compact('products'));
+    }
+
     public function findOrderById($id)
     {
         return Order::where('id', $id)->first();
@@ -72,5 +91,13 @@ class OrderController extends Controller
             'message' => 'order stored',
         ];
         return response()->json($response);
+    }
+    
+    public function ship(Request $request, $id)
+    {
+        $order = Order::findOrFail($id);
+        // Ship order...
+        Mail::to($request->user())->send(new OrderShipped($order));
+        return redirect()->route('order.index')->with('success','Your Order Ship Sended Successfully.');
     }
 }
