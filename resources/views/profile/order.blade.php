@@ -30,6 +30,10 @@
                     </dl>
                     <dl class="total">
                         <dt>Total</dt>
+                            <dd><div class="summary-promo hide">
+                                <div class="promo-title">Promotion</div>
+                                <div class="promo-value final-value" id="basket-promo"></div>
+                            </div></dd>
                             <dd><div class="total-value final-value" id="basket-total">130.00</div></dd>
                     </dl>
                     <dl class="support">
@@ -39,7 +43,7 @@
                             <h4>Have a promo code?</h4>
                             <form class="form-inline">
                                 <div class="input-group">
-                                    <input id="promo-code" class="form-control-plaintext promo-code-field" name="promo-code" maxlength="5" placeholder="Enter a promotional code">
+                                    <input id="promo-code" class="form-control-plaintext promo-code-field" name="promo-code" maxlength="5" placeholder="Enter a promotional code"> 
                                     <input type="button" class="btn btn-primary promo-code-btn" value="Apply">
                                 </div>
                             </form>
@@ -77,7 +81,9 @@
 @endsection
 @push('scripts')
 <script>
-    
+    var promoCode;
+    var promoPrice;
+
     $(document).ready(function () {
       updateSumItems();
       updateSubtotal();
@@ -101,16 +107,41 @@
         });
     }
 
-    function updateTotal() {
-        let total = 0;
-        $('.ux-card').each(function () {
-            total += parseFloat($(this).children('.subtotal').text());
-        });
-        $('.clean-total').text(total);
-        let tax = parseFloat($('span.taxes').text());
-        {{-- console.log($('span.taxes').text()); --}}
-        $('#basket-total').text(tax + total);
-        $('span.total-save').text(tax + total);
+    function updateTotal(promo=false) {
+        var total = 0;
+        if (promo) {
+            var subtotal = 0;
+
+            $('.ux-card').each(function () {
+                subtotal += parseFloat($(this).children('.subtotal').text());
+            });
+
+            total = subtotal;
+
+            //If there is a valid promoCode, and subtotal < 10 subtract from total
+            var promoPrice = parseFloat($('.promo-value').text());
+            if (promoPrice) {
+                if (subtotal >= 10) {
+                    total -= promoPrice;
+                } else {
+                    alert('Order must be more than $10 for Promo code to apply.');
+                    $('.summary-promo').addClass('hide');
+                }
+            
+                $('.clean-total').text(total);
+                let tax = parseFloat($('span.taxes').text());
+                $('#basket-total').text(tax + total);
+                $('span.total-save').text(tax + total);
+            }
+        } else {
+            $('.ux-card').each(function () {
+                total += parseFloat($(this).children('.subtotal').text());
+            });
+            $('.clean-total').text(total);
+            let tax = parseFloat($('span.taxes').text());
+            $('#basket-total').text(tax + total);
+            $('span.total-save').text(tax + total);
+        }
     }
 
     $('.terms button').on('click', function () {
@@ -125,6 +156,29 @@
         $(".complete button").attr("disabled", "disabled");
     });
 
+    $('.promo-code-btn').click(function () {
+
+      promoCode = $('#promo-code').val();
+
+      if (promoCode == '10off' || promoCode == '10OFF') {
+        //If promoPrice has no value, set it as 10 for the 10OFF promocode
+        if (!promoPrice) {
+          promoPrice = 10;
+        } else if (promoCode) {
+          promoPrice = promoPrice * 1;
+        }
+      } else if (promoCode != '') {
+        alert("Invalid Promo Code");
+        promoPrice = 0;
+      }
+
+      //If there is a promoPrice that has been set (it means there is a valid promoCode input) show promo
+      if (promoPrice) {
+        $('.summary-promo').removeClass('hide');
+        $('.promo-value').text(promoPrice.toFixed(2));
+        updateTotal(true);
+      }
+    });
 
 </script>
 @endpush

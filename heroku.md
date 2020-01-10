@@ -112,73 +112,51 @@ At any point, you can find both the name of your PostgreSQL variable and its val
     heroku config
 ```
 
-On apps with multiple databases, or if you didn't get the DATABASE_URL set properly for some reason, you can promote a particular server to be the primary database:
 
-$ heroku pg:promote HEROKU_POSTGRESQL_RED_URL
-
-
-Configuring Laravel to use PostgreSQL
-
-Once again, if this is real app, you're going to want to only be making these changes in your production configuration settings, but for now we're just hacking at a dummy app.
-
-First, change the value of 'default' in app/config/database.php to 'pgsql'.
-
-    'default' => 'pgsql',
-
-Then, just like we did with MySQL, set the following at the top of your database.php:
-
-$url = parse_url(getenv("DATABASE_URL"));
-
-$host = $url["host"];
-$username = $url["user"];
-$password = $url["pass"];
-$database = substr($url["path"], 1);
-
-Then change your pgsql entry in that same file to be the following:
-
-    'pgsql' => array(
-        'driver'   => 'pgsql',
-        'host'     => $host,
-        'database' => $database,
-        'username' => $username,
-        'password' => $password,
-        'charset'  => 'utf8',
-        'prefix'   => '',
-        'schema'   => 'public',
-    ),
-
-That's it! Commit and push and migrate:
-
-$ git add .
-$ git commit -m "Convert to use Heroku PostgreSQL database"
-$ git push heroku master
-$ heroku run php /app/artisan migrate
-
-
-The last step is about database configuration, so we can running our migrations in Heroku. Actually to using MySQL service in Heroku we need to upgrade our membership. In this tutorial we will using PostgreSQL because it’s free :D
-
-First, click “Resources” menu, then in the “Add-ons” side, click “Find more add-ons”. You’ll redirect into Heroku Add-ons page.
-
-We will got some configuration value, for this moment we focus on “DATABASE_URL” value to setup our Laravel App database.
+## Configuring Laravel to use PostgreSQL
 
 Now, open your config/database.php file, and in the top of file, put this code
 
+```php
     $DATABASE_URL=parse_url(‘DATABASE_URL’);
-
+```
 Change the ‘DATABASE_URL’ with your “DATABASE_URL” in the terminal previously. After that, setting your pgsql part became like this
+First, change the value of 'default' in app/config/database.php to 'pgsql'.
+```php
+    'default' => 'pgsql',
+```
 
-Then, set the pgsql became your default database setup, like this
-make the pgsql became your default database connection
+Then change your pgsql entry in that same file to be the following:
 
-Ok, now we need to commit and push our config/database.php update into Heroku repository. Back into terminal and running this
+```php
+        'pgsql' => [
+            'driver' => 'pgsql',
+            'host' => $DATABASE_URL['host'],
+            'port' => $DATABASE_URL['post'],
+            'database' => ltrim($DATABASE_URL['path'], '/'),
+            'username' => $DATABASE_URL['user'],
+            'password' => $DATABASE_URL['pass'],
+            'charset' => 'utf8',
+            'prefix' => '',
+            'prefix_indexes' => true,
+            'schema' => 'public',
+            'sslmode' => 'prefer',
+        ],
+```
 
-    git add .
-    git commit -m “Update database connection”
-    git push heroku master
+## Commit and push and migrate:
 
-After that, now you can running your migration in the terminal, like this
+```bash
+ git add .
+ git commit -m "Convert to use Heroku PostgreSQL database"
+ git push heroku master
 
-Successful, now you are ready to running your Laravel App with Heroku. 
+```
+## Run migrations
+
+```bash
+    heroku run -a $app_name php artisan migrate
+```
 
 ## Additional Configuration
 
@@ -188,12 +166,20 @@ Optionally set your app's environment to development
     heroku config:set --app $app_name APP_ENV=development APP_DEBUG=true APP_LOG_LEVEL=debug
 ```
 
-## Run migrations
 
-```bash
-    heroku run -a $app_name php artisan migrate
+## Generate a URL for an asset using HTTPS:
+
+```php
+
+    <link rel="dns-prefetch" href="//fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
+    <!-- Bootstrap core CSS -->
+    <link href="{{ secure_asset('css/bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{ secure_asset('fontawesome/css/all.min.css') }}" rel="stylesheet">
+    <!-- Custom styles for this template -->
+    <link href="{{ secure_asset('css/shop.css') }}" rel="stylesheet">
+
 ```
-
 ## License
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
