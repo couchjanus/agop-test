@@ -12,15 +12,17 @@ class OrderShipped extends Mailable
     use Queueable, SerializesModels;
 
     public $order;
-
+    public $invoice;
+    
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct($order)
+    public function __construct($invoice, $order)
     {
         $this->order = $order;
+        $this->invoice = $invoice;
     }
 
     /**
@@ -30,9 +32,8 @@ class OrderShipped extends Mailable
      */
     public function build()
     {
-        // return $this->markdown('emails.orders.shipped')->with(['url'=>'http://my.cat']);
-
-        return $this->subject('Ship order')
-        ->markdown('emails.orders.shipped')->with(['url'=>'http://my.cat', 'order'=>$this->order]);
+        return $this->subject('Order Shipped')
+        ->markdown('emails.orders.shipped')
+        ->with(['url'=>'http://my.cat', 'invoice'=>$this->invoice, 'order'=>$this->order]);
     }
 }

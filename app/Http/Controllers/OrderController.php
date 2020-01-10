@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request, Response;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\OrderShipped;
 
 use App\Order;
 use App\Product;
@@ -68,14 +70,14 @@ class OrderController extends Controller
         $products = collect([]);
 
         foreach ($items as $item) {
-            $product = Product::where('id', $item->id)->with('categories')->with('images')->with('brand')->first();
+            $product = Product::where('id', $item->product_id)->with('categories')->with('images')->with('brand')->first();
             $product['quantity'] = $item->quantity;
             $products->push($product);
         }
 
         // return Response::json($products);
 
-        return view('profile.order', compact('products'));
+        return view('profile.order', compact('products', 'order'));
     }
 
     public function findOrderById($id)
@@ -93,11 +95,25 @@ class OrderController extends Controller
         return response()->json($response);
     }
     
-    public function ship(Request $request, $id)
+    public function orderShipped(Request $request, $id)
     {
-        $order = Order::findOrFail($id);
         // Ship order...
-        Mail::to($request->user())->send(new OrderShipped($order));
-        return redirect()->route('order.index')->with('success','Your Order Ship Sended Successfully.');
+        $order = Order::findOrFail($id);
+        $items = OrderItem::where('order_id', $order->id)->get();
+        $invoice = collect([]);
+
+        foreach ($items as $item) {
+            $product = Product::where('id', $item->product_id)->with('categories')->with('images')->with('brand')->first();
+            $product['quantity'] = $item->quantity;
+            $invoice->push($product);
+        }
+            
+        Mail::to($request->user())->send(new OrderShipped($invoice, $order));
+
+        if (Mail::failures()) {
+            return redirect()->route('profile.orders')->with('info','Sorry! Please try again latter');
+        }else{
+            return redirect()->route('profile.orders')->with('success','Great! Your Order Ship Sended Successfully in your mail.');
+        }
     }
 }

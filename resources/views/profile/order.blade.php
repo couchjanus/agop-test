@@ -64,7 +64,9 @@
                         <button type="button" class="btn btn-danger review">I Agree</button>
                     </div>
                     <div class="complete">
-                        <button type="button" disabled="disabled" class="btn btn-danger">Complete Purchase</button>
+                        <a href="{{ route('order.ship', $order->id) }}">
+                            <button type="button" disabled="disabled" class="btn btn-danger">Complete Purchase</button>
+                        </a>
                     </div>
                 </div>
                
